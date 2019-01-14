@@ -1,0 +1,25 @@
+### Getting Agent information
+
+GET https://us-central1-dialogflow-web-v2.cloudfunctions.net/gateway
+
+### Detect Intent (no formatting)
+
+POST https://us-central1-dialogflow-web-v2.cloudfunctions.net/gateway
+Content-Type: application/json
+
+{
+    "q": "Hi",
+    "session_id": "test",
+    "lang": "en"
+}
+
+### Detect Intent (with formatting)
+
+POST https://us-central1-dialogflow-web-v2.cloudfunctions.net/gateway?format=true
+Content-Type: application/json
+
+{
+    "q": "Hi",
+    "session_id": "test",
+    "lang": "en"
+}
