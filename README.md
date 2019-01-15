@@ -6,7 +6,7 @@
 
 Dialogflow Gateway, is a service, that is exposing Dialogflow gRPC API, to HTTP-Clients. Technically it is a Serverless Function, that you need to run as a backend, to make Dialogflow Web Interface (or other Software) able to connect to V2 API, since Dialogflow has removed native HTTP API from V2, replacing it by gRPC, which browsers cannot natively access, because it would require them, to use Google Cloud Service Accounts to authenticate their requests, which cannot be used in Web Clients due to security issues
 
-We will use firebase functions to deploy it, but you can port it to Express, Amazon Lambda and Webtask.io for sure
+We will use firebase functions or nodejs to deploy it, but you can port it to Express, Amazon Lambda and Webtask.io for sure
 
 It's also compatible with Kubeless
 
@@ -18,11 +18,6 @@ It's also compatible with Kubeless
 - Make requests to Dialogflow & Webhook
 - Format responses in user-friendly JSON
 - Secure your connection endpoint
-
-## Known issues
-
-- Sometimes it returns 500 on cold start (Google's issue). NOTE: the Google Cloud Function timeout is 60s. If your webhook needs longer, then you have to deploy it with --timeout flag
-- If it returns 429, enable billing or wait. It's not your problem as well, Google just wants to earn some ca$h on rps (requests per second)
 
 ## Component Support
 
@@ -83,67 +78,7 @@ Content-Type: application/json
 }
 ```
 
-## Getting Started (Using Firebase)
-
-First of all install Firebase CLI
-
-```
-npm install -g firebase-tools
-```
-
-Or if you prefer yarn
-
-```
-yarn global add firebase-tools
-```
-
-Then login using and follow the instructions
-
-```
-firebase login
-```
-
-Create an empty directory and execute
-
-```
-firebase init
-```
-
-Using arrow keys go to `Functions` and press **Spacebar** and then commit it with **Enter**
-
-Select your project associated with your dialogflow agent using arrow keys and commit it with **Enter**
-
-Then once again press **Enter** (the arrow should point on "JavaScript")
-
-Then press **N** (case-sensetive) on your keyboard and commit it with **Enter**
-
-Then press **Y** (case-sensetive) on your keyboard and commit it with **Enter**
-
-Wait a second, when download is complete it should say `✔ Firebase initialization complete!`
-
-`cd` into the `functions/` directory and install dialogflow
-
-```
-npm install --save dialogflow
-```
-
-Or if you prefer yarn
-
-```
-yarn add dialogflow
-```
-
-#### CLONE THIS REPOSITORY
-
-```
-git clone https://github.com/MishUshakov/dialogflow-gateway.git
-```
-
-Or just `Download ZIP` and unpack it
-
-**REPLACE** function's `index.js` with `index.js` from **this** repository
-
-#### GETTING SERVICE ACCOUNT
+## GETTING SERVICE ACCOUNT
 
 Go to [Google Cloud IAM (Google Cloud Indian Access Manager)](https://console.cloud.google.com/iam-admin/serviceaccounts/create)
 
@@ -155,8 +90,8 @@ And follow my Visual Guide:
 ![](https://i.imgur.com/lyYWgWP.png)
 ![](https://i.imgur.com/KQBYWuf.png)
 
-Now you are ready to go. Rename your keys file to `service_account.json` and move it to the `functions/` directory (where your `index.js` is)
+Now you are ready to go. Rename your keys file to `service_account.json` and follow the instructions for preferred provider below
 
-Deploy your Gateway with `firebase deploy --only functions`
+[Firebase](/firebase)
 
-Check the health by opening the URL, firebase provided to you and try to make a request like on the example above
+[Node.js (self hosted)](/nodejs)
