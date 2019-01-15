@@ -1,6 +1,6 @@
 # Getting Started (Using Firebase)
 
-First of all install Firebase CLI
+First of all install Firebase CLI (if you don't have it yet)
 
 ```
 npm install -g firebase-tools
@@ -56,9 +56,9 @@ git clone https://github.com/MishUshakov/dialogflow-gateway.git
 
 Or just `Download ZIP` and unpack it
 
-**REPLACE** your function's `index.js` with `firebase/index.js` from **this repository**
+**REPLACE** your function's `index.js` with `index.js` from **this folder**
 
-[Get your service keys](https://github.com/MishUshakov/dialogflow-gateway#getting-service-account) and place it in `functions/`
+[Get your service keys](https://github.com/MishUshakov/dialogflow-gateway#getting-service-account) and place it under `functions/`
 
 Deploy your Gateway with `firebase deploy --only functions`
 

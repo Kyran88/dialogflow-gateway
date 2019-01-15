@@ -6,7 +6,7 @@
 
 Dialogflow Gateway, is a service, that is exposing Dialogflow gRPC API, to HTTP-Clients. Technically it is a Serverless Function, that you need to run as a backend, to make Dialogflow Web Interface (or other Software) able to connect to V2 API, since Dialogflow has removed native HTTP API from V2, replacing it by gRPC, which browsers cannot natively access, because it would require them, to use Google Cloud Service Accounts to authenticate their requests, which cannot be used in Web Clients due to security issues
 
-We will use firebase functions or nodejs to deploy it, but you can port it to Express, Amazon Lambda and Webtask.io for sure
+You can use firebase functions or nodejs to deploy it, but you could port it to Express, Amazon Lambda and Webtask.io for sure
 
 It's also compatible with Kubeless
 
@@ -90,7 +90,7 @@ And follow my Visual Guide:
 ![](https://i.imgur.com/lyYWgWP.png)
 ![](https://i.imgur.com/KQBYWuf.png)
 
-Now you are ready to go. Rename your keys file to `service_account.json` and follow the instructions for preferred provider below
+Now you are ready to go. Rename your downloaded file to `service_account.json` and follow the instructions for preferred provider below
 
 [Firebase](/firebase)
 
