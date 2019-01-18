@@ -1,10 +1,10 @@
 ### Getting Agent information
 
-GET https://us-central1-dialogflow-web-v2.cloudfunctions.net/gateway
+GET http://localhost:8080
 
 ### Detect Intent (no formatting)
 
-POST https://us-central1-dialogflow-web-v2.cloudfunctions.net/gateway
+POST http://localhost:8080
 Content-Type: application/json
 
 {
@@ -15,7 +15,7 @@ Content-Type: application/json
 
 ### Detect Intent (with formatting)
 
-POST https://us-central1-dialogflow-web-v2.cloudfunctions.net/gateway?format=true
+POST http://localhost:8080?format=true
 Content-Type: application/json
 
 {

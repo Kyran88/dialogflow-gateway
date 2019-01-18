@@ -1,10 +1,10 @@
 const dialogflow = require('dialogflow')
-const serviceAccount = require('./service_account.json')  // <-- change it to yours
+const serviceAccount = require('./service_account.json')  // <-- change service_account to yours
 
 /* AgentsClient retrieves information about the agent */
 
 const agentsClient = new dialogflow.AgentsClient({
-    credentials: {
+    credentials: { // <-- Initialize with service account
         private_key: serviceAccount.private_key,
         client_email: serviceAccount.client_email
     }
@@ -13,7 +13,7 @@ const agentsClient = new dialogflow.AgentsClient({
 /* SessionsClient makes text requests */
 
 const sessionClient = new dialogflow.SessionsClient({
-    credentials: {
+    credentials: { // <-- Initialize with service account
         private_key: serviceAccount.private_key,
         client_email: serviceAccount.client_email
     }
@@ -48,10 +48,15 @@ gateway = (req, res) => {
     /* Detect Intent (send a query to dialogflow) */
 
     else if(req.method == "POST"){
+
+        /* If no body, session, query, or lang, return 400 */
+
         if(!req.body || !req.body.session_id || !req.body.q || !req.body.lang){
             res.set(headers)
             res.send(400)
         }
+
+        /* Prepare dialogflow request */
 
         else {
             let session_id = req.body.session_id
@@ -68,6 +73,8 @@ gateway = (req, res) => {
                     }
                 }
             }
+            
+            /* Send our request to Dialogflow */
 
             sessionClient.detectIntent(request).then(responses => {
                 
@@ -95,6 +102,8 @@ gateway = (req, res) => {
 
                         if(fulfillment[component].platform == "PLATFORM_UNSPECIFIED"){
                             if(fulfillment[component].text){
+
+                                /* Default/Webhook Text */
                                 formatted.components.push({name: "DEFAULT", content: fulfillment[component].text.text[0]})
                             }
 
@@ -121,10 +130,12 @@ gateway = (req, res) => {
                             }
 
                             if(fulfillment[component].image){
+                                /* Image component (Webhook) */
                                 formatted.components.push({name: "IMAGE", content: fulfillment[component].image})
                             }
 
                             if(fulfillment[component].quickReplies){
+                                /* Suggestions */
                                 formatted.components.push({name: "SUGGESTIONS", content: fulfillment[component].quickReplies.quickReplies})
                             }
                         }
@@ -133,34 +144,38 @@ gateway = (req, res) => {
 
                         if(fulfillment[component].platform == "ACTIONS_ON_GOOGLE"){
                             if(fulfillment[component].simpleResponses){
+                                /* Simple Response */
                                 formatted.components.push({name: "SIMPLE_RESPONSE", content: fulfillment[component].simpleResponses.simpleResponses[0]})
                             }
                             
                             if(fulfillment[component].basicCard){
+                                /* Card */
                                 formatted.components.push({name: "CARD", content: fulfillment[component].basicCard})
                             }
 
                             if(fulfillment[component].listSelect){
+                                /* List */
                                 formatted.components.push({name: "LIST", content: fulfillment[component].listSelect})
                             }
 
                             if(fulfillment[component].suggestions){
-
                                 /* Convert Google Suggestions to text-only suggestions (like the webhook quick-replies) */
-                                
                                 let suggestions = fulfillment[component].suggestions.suggestions.map(suggestion => suggestion.title)
                                 formatted.components.push({name: "SUGGESTIONS", content: suggestions})
                             }
 
                             if(fulfillment[component].linkOutSuggestion){
+                                /* Link out suggestion */
                                 formatted.components.push({name: "LINK_OUT_SUGGESTION", content: fulfillment[component].linkOutSuggestion})
                             }
 
                             if(fulfillment[component].payload){
+                                /* Payload */
                                 formatted.components.push({name: "PAYLOAD", content: fulfillment[component].payload})
                             }
 
                             if(fulfillment[component].carouselSelect){
+                                /* Carousel Card */
                                 formatted.components.push({name: "CAROUSEL_CARD", content: fulfillment[component].carouselSelect.items})
                             }
                         }
@@ -199,6 +214,7 @@ gateway = (req, res) => {
 
 const restify = require('restify')
 let server = restify.createServer()
+
 server.get('/', gateway)
 server.post('/', gateway)
 server.opts('/', gateway)

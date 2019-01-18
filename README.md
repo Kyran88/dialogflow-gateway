@@ -6,9 +6,7 @@
 
 Dialogflow Gateway, is a service, that is exposing Dialogflow gRPC API, to HTTP-Clients. Technically it is a Serverless Function, that you need to run as a backend, to make Dialogflow Web Interface (or other Software) able to connect to V2 API, since Dialogflow has removed native HTTP API from V2, replacing it by gRPC, which browsers cannot natively access, because it would require them, to use Google Cloud Service Accounts to authenticate their requests, which cannot be used in Web Clients due to security issues
 
-You can use firebase functions or nodejs to deploy it, but you could port it to Express, Amazon Lambda and Webtask.io for sure
-
-It's also compatible with Kubeless
+This is a reference implementation made in NodeJS, but you could port it to Firebase, Lambda and Webtask.io for sure
 
 *Consider this software as experimental, because it is built on top of Google Cloud Crutches, though it was battle-tested by my users*
 
@@ -90,8 +88,28 @@ And follow my Visual Guide:
 ![](https://i.imgur.com/lyYWgWP.png)
 ![](https://i.imgur.com/KQBYWuf.png)
 
-Now you are ready to go. Rename your downloaded file to `service_account.json` and follow the instructions for preferred provider below
+Now you are ready to go. 
 
-[Firebase](/firebase)
+#### Rename your downloaded file to `service_account.json` and follow the instructions for NodeJS below
 
-[Node.js (self hosted)](/nodejs)
+## Getting Started (Using NodeJS)
+
+#### CLONE THIS REPOSITORY
+
+```
+git clone https://github.com/MishUshakov/dialogflow-gateway.git
+```
+
+Or just `Download ZIP` and unpack it
+
+Place your `service_account.json` in **this** directory
+
+Run `npm install` or `yarn` **in this folder**
+
+Run `node index.js` **in this folder**
+
+If you see this message, you are ready to go: 
+
+```
+Dialogflow Gateway is listening at http://[::]:8080
+```

@@ -86,9 +86,9 @@
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
 "@types/lodash@^4.14.104":
-  version "4.14.119"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.119.tgz#be847e5f4bc3e35e46d041c394ead8b603ad8b39"
-  integrity sha512-Z3TNyBL8Vd/M9D9Ms2S3LmFq2sSMzahodD6rCS9V2N44HUMINb75jNkSuwAx7eo2ufqTdfOdtGQpNbieUjPQmw==
+  version "4.14.120"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.120.tgz#cf265d06f6c7a710db087ed07523ab8c1a24047b"
+  integrity sha512-jQ21kQ120mo+IrDs1nFNVm/AsdFxIx2+vZ347DbogHJPd/JzKNMOqU6HCYin1W6v8l5R9XSO2/e9cxmn7HAnVw==
 
 "@types/long@^4.0.0":
   version "4.0.0"
@@ -785,9 +785,9 @@ gauge@~2.7.3:
     wide-align "^1.1.0"
 
 gaxios@^1.0.4:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/gaxios/-/gaxios-1.1.0.tgz#a5a4e54c4eef958b924ec2fc54ce9b51a19e2f91"
-  integrity sha512-xB0iHscgnZ5N4uJ9YqVX1czJ4k+GfppD+J7naM1Lro5O29so98WfExKtP26u3s8nF9J1efEZ0h4xEsT0od0pAQ==
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/gaxios/-/gaxios-1.2.4.tgz#e426844fa7a0292549c92bdd2839be3a72aae420"
+  integrity sha512-LhBin5JU+iIQfqrIPu1VHoV3EpJ8HhupS05LbAXLc1aAsTNDOjxjrkU9C1X1KELf/HtbA3fRtIZ3ouH/xvt1UQ==
   dependencies:
     extend "^3.0.2"
     https-proxy-agent "^2.2.1"
@@ -914,9 +914,9 @@ google-proto-files@^0.16.0:
     protobufjs "^6.8.0"
 
 grpc@^1.12.2:
-  version "1.17.0"
-  resolved "https://registry.yarnpkg.com/grpc/-/grpc-1.17.0.tgz#d7971dd39bd4eec90c69a048f7727795ab504876"
-  integrity sha512-5zb5ilwHlsiWfE2Abq/IN5SkHQ2zi4QF/u9Gewcw5DO3y+hGTtzZUiMK52MX3YZHAIRjqxDcO3fx0jLhPjT8Zw==
+  version "1.18.0"
+  resolved "https://registry.yarnpkg.com/grpc/-/grpc-1.18.0.tgz#a550a464f787073f305c0a136ecc4b74fffbf94c"
+  integrity sha512-M0K67Zhv2ZzCjrTbQvjWgYFPB929L+qAVnbNgXepbfO5kJxUYc30dP8m8vb+o8QdahLHAeYfIqRoIzZRcCB98Q==
   dependencies:
     lodash.camelcase "^4.3.0"
     lodash.clone "^4.5.0"
