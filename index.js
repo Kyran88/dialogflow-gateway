@@ -2,7 +2,6 @@ const dialogflow = require('dialogflow')
 const serviceAccount = require('./service_account.json')  // <-- change service_account to yours
 
 /* AgentsClient retrieves information about the agent */
-
 const agentsClient = new dialogflow.AgentsClient({
     credentials: { // <-- Initialize with service account
         private_key: serviceAccount.private_key,
@@ -11,7 +10,6 @@ const agentsClient = new dialogflow.AgentsClient({
 })
 
 /* SessionsClient makes text requests */
-
 const sessionClient = new dialogflow.SessionsClient({
     credentials: { // <-- Initialize with service account
         private_key: serviceAccount.private_key,
@@ -20,7 +18,6 @@ const sessionClient = new dialogflow.SessionsClient({
 })
 
 /* We need to set this headers, to make our HTTP calls possible */
-
 let headers = {
     'Content-Type':'application/json',
     'Access-Control-Allow-Headers': 'Content-Type, Cache-Control',
@@ -29,8 +26,8 @@ let headers = {
 }
 
 gateway = (req, res) => {
-    /* On GET request return the information about the agent */
 
+    /* On GET request return the information about the agent */
     if(req.method == "GET"){
         agentsClient.getAgent({parent: 'projects/' + serviceAccount.project_id}, {}, (err, agent) => {
             if (err){
@@ -46,18 +43,15 @@ gateway = (req, res) => {
     }
 
     /* Detect Intent (send a query to dialogflow) */
-
     else if(req.method == "POST"){
 
         /* If no body, session, query, or lang, return 400 */
-
         if(!req.body || !req.body.session_id || !req.body.q || !req.body.lang){
             res.set(headers)
             res.send(400)
         }
 
         /* Prepare dialogflow request */
-
         else {
             let session_id = req.body.session_id
             let q = req.body.q
@@ -75,16 +69,13 @@ gateway = (req, res) => {
             }
             
             /* Send our request to Dialogflow */
-
             sessionClient.detectIntent(request).then(responses => {
                 
                 /* If the response should be formatted (?format=true), then return the format the response */
-
                 if(req.query.format == "true"){
                     let fulfillment = responses[0].queryResult.fulfillmentMessages
 
                     /* Base of formatted response */
-
                     let formatted = {
                         id: responses[0].responseId,
                         action: responses[0].queryResult.action,
@@ -95,11 +86,9 @@ gateway = (req, res) => {
                     }
 
                     /* Iterate through components and add them to components list */
-
                     for(let component in fulfillment){
 
                         /* Recognize Dialogflow and Webhook components */
-
                         if(fulfillment[component].platform == "PLATFORM_UNSPECIFIED"){
                             if(fulfillment[component].text){
 
@@ -110,7 +99,6 @@ gateway = (req, res) => {
                             if(fulfillment[component].card){
 
                                 /* Convert Webhook Card to Actions on Google Card (to follow a common format) */
-
                                 let google_card = {
                                     title: fulfillment[component].card.title,
                                     formattedText: fulfillment[component].card.subtitle,
@@ -118,65 +106,122 @@ gateway = (req, res) => {
                                         imageUri: fulfillment[component].card.imageUri,
                                         accessibilityText: 'Card Image'
                                     },
-                                    buttons: [{
-                                        title: fulfillment[component].card.buttons[0].text,
+                                    buttons: []
+                                }
+
+                                for (let button in fulfillment[component].card.buttons){
+                                    google_card.buttons.push({
+                                        title: fulfillment[component].card.buttons[button].text,
                                         openUriAction: {
-                                            uri: fulfillment[component].card.buttons[0].postback
+                                            uri: fulfillment[component].card.buttons[button].postback
                                         }
-                                    }]
+                                    })
                                 }
 
                                 formatted.components.push({name: "CARD", content: google_card})
                             }
 
                             if(fulfillment[component].image){
-                                /* Image component (Webhook) */
+
+                                /* Webhook Image */
                                 formatted.components.push({name: "IMAGE", content: fulfillment[component].image})
                             }
 
                             if(fulfillment[component].quickReplies){
-                                /* Suggestions */
+
+                                /* Webhook Suggestions */
                                 formatted.components.push({name: "SUGGESTIONS", content: fulfillment[component].quickReplies.quickReplies})
                             }
                         }
 
                         /* Recognize Actions on Google components */
-
                         if(fulfillment[component].platform == "ACTIONS_ON_GOOGLE"){
                             if(fulfillment[component].simpleResponses){
-                                /* Simple Response */
+
+                                /* Google Simple Response */
                                 formatted.components.push({name: "SIMPLE_RESPONSE", content: fulfillment[component].simpleResponses.simpleResponses[0]})
                             }
                             
                             if(fulfillment[component].basicCard){
-                                /* Card */
+
+                                /* Google Card */
                                 formatted.components.push({name: "CARD", content: fulfillment[component].basicCard})
                             }
 
                             if(fulfillment[component].listSelect){
-                                /* List */
+
+                                /* Google List */
                                 formatted.components.push({name: "LIST", content: fulfillment[component].listSelect})
                             }
 
                             if(fulfillment[component].suggestions){
+
                                 /* Convert Google Suggestions to text-only suggestions (like the webhook quick-replies) */
                                 let suggestions = fulfillment[component].suggestions.suggestions.map(suggestion => suggestion.title)
                                 formatted.components.push({name: "SUGGESTIONS", content: suggestions})
                             }
 
                             if(fulfillment[component].linkOutSuggestion){
-                                /* Link out suggestion */
+
+                                /* Google Link out suggestion */
                                 formatted.components.push({name: "LINK_OUT_SUGGESTION", content: fulfillment[component].linkOutSuggestion})
                             }
 
                             if(fulfillment[component].payload){
-                                /* Payload */
+
+                                /* Google Payload */
                                 formatted.components.push({name: "PAYLOAD", content: fulfillment[component].payload})
                             }
 
                             if(fulfillment[component].carouselSelect){
-                                /* Carousel Card */
+
+                                /* Google Carousel Card */
                                 formatted.components.push({name: "CAROUSEL_CARD", content: fulfillment[component].carouselSelect.items})
+                            }
+                        }
+
+                        if(fulfillment[component].platform == "FACEBOOK" || fulfillment[component].platform == "SLACK" || fulfillment[component].platform == "TELEGRAM" || fulfillment[component].platform == "KIK" || fulfillment[component].platform == "VIBER" || fulfillment[component].platform == "SKYPE" || fulfillment[component].platform == "LINE"){
+                            if(fulfillment[component].text){
+
+                                /* Messenger Text */
+                                formatted.components.push({name: "DEFAULT", content: fulfillment[component].text.text[0]})
+                            }
+
+                            if(fulfillment[component].image){
+
+                                /* Messenger Image */
+                                formatted.components.push({name: "IMAGE", content: fulfillment[component].image})
+                            }
+
+                            if(fulfillment[component].card){
+
+                                /* Convert Messenger Card to Actions on Google Card  */
+                                let google_card = {
+                                    title: fulfillment[component].card.title,
+                                    formattedText: fulfillment[component].card.subtitle,
+                                    image: {
+                                        imageUri: fulfillment[component].card.imageUri,
+                                        accessibilityText: 'Card Image'
+                                    },
+                                    buttons: []
+                                }
+
+                                for (let button in fulfillment[component].card.buttons){
+                                    google_card.buttons.push({
+                                        title: fulfillment[component].card.buttons[button].text,
+                                        openUriAction: {
+                                            uri: fulfillment[component].card.buttons[button].postback
+                                        }
+                                    })
+                                }
+
+                                formatted.components.push({name: "CARD", content: google_card})
+                            }
+
+                            if(fulfillment[component].payload){
+
+                                /* Messenger Payload */
+                                formatted.components.push({name: "PAYLOAD", content: fulfillment[component].payload})
                             }
                         }
                     }

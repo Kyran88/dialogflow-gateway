@@ -8,7 +8,7 @@ POST http://localhost:8080
 Content-Type: application/json
 
 {
-    "q": "Hi",
+    "q": "Test",
     "session_id": "test",
     "lang": "en"
 }
@@ -19,7 +19,7 @@ POST http://localhost:8080?format=true
 Content-Type: application/json
 
 {
-    "q": "Hi",
+    "q": "Test",
     "session_id": "test",
     "lang": "en"
 }

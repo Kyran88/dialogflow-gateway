@@ -6,7 +6,7 @@
 
 Dialogflow Gateway, is a service, that is exposing Dialogflow gRPC API, to HTTP-Clients. Technically it is a Serverless Function, that you need to run as a backend, to make Dialogflow Web Interface (or other Software) able to connect to V2 API, since Dialogflow has removed native HTTP API from V2, replacing it by gRPC, which browsers cannot natively access, because it would require them, to use Google Cloud Service Accounts to authenticate their requests, which cannot be used in Web Clients due to security issues
 
-This is a reference implementation made in NodeJS, but you could port it to Firebase, Lambda and Webtask.io for sure
+This is a reference implementation made in NodeJS (and Restify), but it's portable to Serverless: Firebase, Lambda and Webtask.io and others
 
 *Consider this software as experimental, because it is built on top of Google Cloud Crutches, though it was battle-tested by my users*
 
@@ -14,7 +14,7 @@ This is a reference implementation made in NodeJS, but you could port it to Fire
 
 - Get information and status of the Agent
 - Make requests to Dialogflow & Webhook
-- Format responses in user-friendly JSON
+- Format responses in user-friendly JSON (with iteratable components, which is great for building [UIs](https://github.com/MishUshakov/dialogflow-web-v2) on top of it)
 - Secure your connection endpoint
 
 ## Component Support
@@ -36,13 +36,20 @@ This is a reference implementation made in NodeJS, but you could port it to Fire
 |                  | Media content        | No (not returned by API)                      | -                   |
 |                  | Custom Payload       | Yes                                           | PAYLOAD             |
 |                  | Table Card           | No (not returned by API)                      | -                   |
-| Others           |                      | Not yet                                       | -                   |
+| Messengers       |                      | Facebook, Slack, Telegram, Kik, Viber, Skype, Line | -                   |
+|                  | Text Response        | Yes                                           | DEFAULT             |
+|                  | Image                | Yes                                           | IMAGE               |
+|                  | Card                 | Yes                                           | CARD                |
+|                  | Quick Replies        | Yes                                           | SUGGESTIONS         |
+|                  | Custom Payload       | Yes                                           | PAYLOAD             |
 
 **Using this software may cost you money. PLEASE USE CAREFULLY**
 
 ## Demo Time
 
-I use [REST Client for VSCode](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) to make requests. You can execute these demos in `extras/test.http` too
+I use [REST Client for VSCode](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) to make requests. You can execute these demos in `extras/test.http`
+
+We will use my Dialogflow Test Gateway, which is running on top of Google Cloud Functions
 
 Getting Agent information
 
@@ -76,6 +83,8 @@ Content-Type: application/json
 }
 ```
 
+# Installation
+
 ## GETTING SERVICE ACCOUNT
 
 Go to [Google Cloud IAM (Google Cloud Indian Access Manager)](https://console.cloud.google.com/iam-admin/serviceaccounts/create)
@@ -90,11 +99,9 @@ And follow my Visual Guide:
 
 Now you are ready to go. 
 
-#### Rename your downloaded file to `service_account.json` and follow the instructions for NodeJS below
+#### Rename your downloaded file to `service_account.json` and follow the instructions below
 
-## Getting Started (Using NodeJS)
-
-#### CLONE THIS REPOSITORY
+## CLONE THIS REPOSITORY
 
 ```
 git clone https://github.com/MishUshakov/dialogflow-gateway.git
@@ -108,7 +115,7 @@ Run `npm install` or `yarn` **in this folder**
 
 Run `node index.js` **in this folder**
 
-If you see this message, you are ready to go: 
+When you see this message, you are ready to go: 
 
 ```
 Dialogflow Gateway is listening at http://[::]:8080
