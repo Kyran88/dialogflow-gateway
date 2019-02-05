@@ -267,6 +267,6 @@ server.opts('/', gateway)
 server.use(restify.plugins.bodyParser())
 server.use(restify.plugins.queryParser())
 
-server.listen(8080, () => {
+server.listen(8090, () => {
     console.log('Dialogflow Gateway is listening at %s', server.url)
 })

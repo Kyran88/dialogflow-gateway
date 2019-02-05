@@ -1,10 +1,10 @@
 ### Getting Agent information
 
-GET http://localhost:8080
+GET http://localhost:8090
 
 ### Detect Intent (no formatting)
 
-POST http://localhost:8080
+POST http://localhost:8090
 Content-Type: application/json
 
 {
@@ -15,7 +15,7 @@ Content-Type: application/json
 
 ### Detect Intent (with formatting)
 
-POST http://localhost:8080?format=true
+POST http://localhost:8090?format=true
 Content-Type: application/json
 
 {
