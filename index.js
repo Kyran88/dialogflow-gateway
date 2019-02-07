@@ -88,17 +88,17 @@ gateway = (req, res) => {
                     /* Iterate through components and add them to components list */
                     for(let component in fulfillment){
 
-                        /* Recognize Dialogflow and Webhook components */
-                        if(fulfillment[component].platform == "PLATFORM_UNSPECIFIED"){
+                        /* Recognize Dialogflow, Messenger and Webhook components */
+                        if(fulfillment[component].platform == "PLATFORM_UNSPECIFIED" || fulfillment[component].platform == "FACEBOOK" || fulfillment[component].platform == "SLACK" || fulfillment[component].platform == "TELEGRAM" || fulfillment[component].platform == "KIK" || fulfillment[component].platform == "VIBER" || fulfillment[component].platform == "SKYPE" || fulfillment[component].platform == "LINE"){
                             if(fulfillment[component].text){
 
-                                /* Default/Webhook Text */
+                                /* Text */
                                 formatted.components.push({name: "DEFAULT", content: fulfillment[component].text.text[0]})
                             }
 
                             if(fulfillment[component].card){
 
-                                /* Convert Webhook Card to Actions on Google Card (to follow a common format) */
+                                /* Convert Card to Actions on Google Card (to follow a common format) */
                                 let google_card = {
                                     title: fulfillment[component].card.title,
                                     formattedText: fulfillment[component].card.subtitle,
@@ -123,14 +123,20 @@ gateway = (req, res) => {
 
                             if(fulfillment[component].image){
 
-                                /* Webhook Image */
+                                /* Image */
                                 formatted.components.push({name: "IMAGE", content: fulfillment[component].image})
                             }
 
                             if(fulfillment[component].quickReplies){
 
-                                /* Webhook Suggestions */
+                                /* Suggestions */
                                 formatted.components.push({name: "SUGGESTIONS", content: fulfillment[component].quickReplies.quickReplies})
+                            }
+
+                            if(fulfillment[component].payload){
+
+                                /* Payload */
+                                formatted.components.push({name: "PAYLOAD", content: fulfillment[component].payload})
                             }
                         }
 
@@ -177,51 +183,6 @@ gateway = (req, res) => {
 
                                 /* Google Carousel Card */
                                 formatted.components.push({name: "CAROUSEL_CARD", content: fulfillment[component].carouselSelect.items})
-                            }
-                        }
-
-                        if(fulfillment[component].platform == "FACEBOOK" || fulfillment[component].platform == "SLACK" || fulfillment[component].platform == "TELEGRAM" || fulfillment[component].platform == "KIK" || fulfillment[component].platform == "VIBER" || fulfillment[component].platform == "SKYPE" || fulfillment[component].platform == "LINE"){
-                            if(fulfillment[component].text){
-
-                                /* Messenger Text */
-                                formatted.components.push({name: "DEFAULT", content: fulfillment[component].text.text[0]})
-                            }
-
-                            if(fulfillment[component].image){
-
-                                /* Messenger Image */
-                                formatted.components.push({name: "IMAGE", content: fulfillment[component].image})
-                            }
-
-                            if(fulfillment[component].card){
-
-                                /* Convert Messenger Card to Actions on Google Card  */
-                                let google_card = {
-                                    title: fulfillment[component].card.title,
-                                    formattedText: fulfillment[component].card.subtitle,
-                                    image: {
-                                        imageUri: fulfillment[component].card.imageUri,
-                                        accessibilityText: 'Card Image'
-                                    },
-                                    buttons: []
-                                }
-
-                                for (let button in fulfillment[component].card.buttons){
-                                    google_card.buttons.push({
-                                        title: fulfillment[component].card.buttons[button].text,
-                                        openUriAction: {
-                                            uri: fulfillment[component].card.buttons[button].postback
-                                        }
-                                    })
-                                }
-
-                                formatted.components.push({name: "CARD", content: google_card})
-                            }
-
-                            if(fulfillment[component].payload){
-
-                                /* Messenger Payload */
-                                formatted.components.push({name: "PAYLOAD", content: fulfillment[component].payload})
                             }
                         }
                     }
